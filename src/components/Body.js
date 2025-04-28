@@ -4,6 +4,8 @@ import Restaurants from "./Restuarant";
 import { useEffect, useState } from "react";
 import Shimmer from "./Shimmer";
 import SearchIcon from "@mui/icons-material/Search";
+import { Link } from "react-router-dom";
+import useOnlineStatus from "../utils/Hooks/useOnlineStatus";
 
 const Body = () => {
   const [listRes, setListRes] = useState([]);
@@ -27,6 +29,12 @@ const Body = () => {
   useEffect(() => {
     fetchData();
   }, []);
+
+  const checkOnlineStatus = useOnlineStatus();
+
+  if (checkOnlineStatus === false) {
+    return <h1>You Are Offline!. Please Check Your Internet</h1>;
+  }
 
   return listRes.length === 0 ? (
     <Shimmer />
@@ -76,10 +84,12 @@ const Body = () => {
       </div>
       <div className="restaurant-container">
         {filteredRest.map((restaurant) => (
-          <Restaurants
-            key={restaurant?.card?.card?.info?.id || Math.random()}
-            resList={restaurant}
-          />
+          <Link
+            key={restaurant?.card?.card?.info?.id}
+            to={`/menu/${restaurant?.card?.card?.info?.id}`}
+          >
+            <Restaurants resList={restaurant} />
+          </Link>
         ))}
       </div>
     </div>
