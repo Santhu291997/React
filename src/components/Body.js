@@ -1,16 +1,19 @@
-import { Button, IconButton, TextField } from "@mui/material";
+import { Button, IconButton, TextField, Typography } from "@mui/material";
 import resData from "../utils/mockData";
-import Restaurants from "./Restuarant";
-import { useEffect, useState } from "react";
+import Restaurants, { promotedRestaurant } from "./Restuarant";
+import { useContext, useEffect, useState } from "react";
 import Shimmer from "./Shimmer";
 import SearchIcon from "@mui/icons-material/Search";
 import { Link } from "react-router-dom";
 import useOnlineStatus from "../utils/Hooks/useOnlineStatus";
+import UserContext from "../utils/Context/UserContext";
 
 const Body = () => {
   const [listRes, setListRes] = useState([]);
   const [searchText, setSearchText] = useState("");
   const [filteredRest, setFilteredRest] = useState([]);
+
+  const { setUserName, loggedInUser } = useContext(UserContext);
 
   const fetchData = async () => {
     const data = await fetch(
@@ -35,6 +38,8 @@ const Body = () => {
   if (checkOnlineStatus === false) {
     return <h1>You Are Offline!. Please Check Your Internet</h1>;
   }
+
+  const PromotedCard = promotedRestaurant(Restaurants);
 
   return listRes.length === 0 ? (
     <Shimmer />
@@ -81,6 +86,12 @@ const Body = () => {
             <SearchIcon />
           </IconButton>
         </div>
+        <div>
+          <TextField
+            value={loggedInUser}
+            onChange={(e) => setUserName(e.target.value)}
+          />
+        </div>
       </div>
       <div className="restaurant-container">
         {filteredRest.map((restaurant) => (
@@ -88,7 +99,11 @@ const Body = () => {
             key={restaurant?.card?.card?.info?.id}
             to={`/menu/${restaurant?.card?.card?.info?.id}`}
           >
-            <Restaurants resList={restaurant} />
+            {restaurant?.card?.card?.info?.promoted ? (
+              <PromotedCard resList={restaurant} />
+            ) : (
+              <Restaurants resList={restaurant} />
+            )}
           </Link>
         ))}
       </div>

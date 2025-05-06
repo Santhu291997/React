@@ -1,12 +1,13 @@
 import { Button } from "@mui/material";
 import { LOGO_URL } from "../utils/constants";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import useOnlineStatus from "../utils/Hooks/useOnlineStatus";
+import UserContext from "../utils/Context/UserContext";
 
 const Header = () => {
   const [btnName, setBtnName] = useState("Login");
-
+  const { loggedInUser } = useContext(UserContext);
   const onlineStatus = useOnlineStatus();
 
   return (
@@ -16,23 +17,31 @@ const Header = () => {
       </div>
       <div className="nav-items">
         <ul className="ul-items">
-          <li>
+          <li className="li-items">
             Online Status:
             {onlineStatus ? "✅" : "🔴"}
           </li>
-          <li>
-            <Link to="/">Home</Link>
+          <li className="li-items">
+            <Link className="link-items" to="/">
+              Home
+            </Link>
           </li>
-          <li>
-            <Link to="/about">About Us</Link>
+          <li className="li-items">
+            <Link className="link-items" to="/about">
+              About Us
+            </Link>
           </li>
-          <li>
-            <Link to="/contact">Contact Us</Link>
+          <li className="li-items">
+            <Link className="link-items" to="/contact">
+              Contact Us
+            </Link>
           </li>
-          <li>
-            <Link to="/grocery">Grocery</Link>
+          <li className="li-items">
+            <Link className="link-items" to="/grocery">
+              Grocery
+            </Link>
           </li>
-          <li>Cart</li>
+          <li className="li-items">Cart</li>
           <Button
             variant="outlined"
             style={{
@@ -47,6 +56,9 @@ const Header = () => {
           >
             {btnName}
           </Button>
+          <li className="li-items" style={{ fontWeight: "bold" }}>
+            {loggedInUser}
+          </li>
         </ul>
       </div>
     </div>
